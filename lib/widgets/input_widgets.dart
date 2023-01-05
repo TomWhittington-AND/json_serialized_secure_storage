@@ -17,10 +17,10 @@ class InputWidgets extends StatelessWidget {
 
   static const storage = FlutterSecureStorage();
   InputtedData addToModel() {
-    NameData nameData = NameData(firstNameController.text,
+    NameData name = NameData(firstNameController.text,
         middleNameController.text, lastNameController.text);
     InputtedData inputtedData =
-        InputtedData(nameData, int.parse(ageController.text));
+        InputtedData(name, int.parse(ageController.text));
     return inputtedData;
   }
 

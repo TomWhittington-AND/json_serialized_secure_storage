@@ -13,6 +13,6 @@ InputtedData _$InputtedDataFromJson(Map<String, dynamic> json) => InputtedData(
 
 Map<String, dynamic> _$InputtedDataToJson(InputtedData instance) =>
     <String, dynamic>{
-      'nameData': instance.nameData,
+      'name': instance.nameData,
       'age': instance.age,
     };
