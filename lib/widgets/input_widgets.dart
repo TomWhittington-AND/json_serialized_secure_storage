@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:json_serialized_secure_storage/widgets/decorated_text_field.dart';
-
-import '../models/inputted_data.dart';
-import '../models/name_data.dart';
 import 'name_input.dart';
+
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+//import 'package:json_string/json_string.dart';
+import 'dart:convert';
 
 class InputWidgets extends StatelessWidget {
   InputWidgets({super.key});
@@ -12,16 +13,17 @@ class InputWidgets extends StatelessWidget {
   final TextEditingController lastNameController = TextEditingController();
   final TextEditingController ageController = TextEditingController();
 
-  void saveData() {
-    NameData nameData = NameData(firstNameController.text,
-        middleNameController.text, lastNameController.text);
+  static const storage = FlutterSecureStorage();
 
-    int age = int.parse(ageController.text);
+  void storeLocally() async {
+    await storage.write(key: 'firstName', value: firstNameController.text);
+    await storage.write(key: 'middleName', value: middleNameController.text);
+    await storage.write(key: 'lastName', value: lastNameController.text);
+    await storage.write(key: 'age', value: ageController.text);
+    print('secure storage output');
 
-    InputtedData inputtedData = InputtedData(nameData, age);
-    print(inputtedData);
-
-    print(inputtedData.toJson());
+    Map<String, String> data = await storage.readAll();
+    print(jsonEncode(data));
   }
 
   @override
@@ -42,7 +44,7 @@ class InputWidgets extends StatelessWidget {
           ),
           const SizedBox(height: 50),
           ElevatedButton(
-            onPressed: saveData,
+            onPressed: storeLocally,
             child: const Text('Save Data'),
           )
         ],
