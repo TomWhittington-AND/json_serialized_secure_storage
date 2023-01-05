@@ -6,15 +6,15 @@ part 'inputted_data.g.dart';
 
 @JsonSerializable()
 class InputtedData {
-  NameData nameData;
+  NameData name;
   int age;
 
-  InputtedData(this.nameData, this.age);
+  InputtedData(this.name, this.age);
 
   @override
   String toString() {
     return '''
-nameData: $nameData
+nameData: $name
 age: $age
 ''';
   }
