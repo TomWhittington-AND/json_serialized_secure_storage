@@ -3,8 +3,10 @@ import 'package:json_serialized_secure_storage/widgets/decorated_text_field.dart
 import 'name_input.dart';
 
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
-//import 'package:json_string/json_string.dart';
 import 'dart:convert';
+
+import '../models/inputted_data.dart';
+import '../models/name_data.dart';
 
 class InputWidgets extends StatelessWidget {
   InputWidgets({super.key});
@@ -14,16 +16,22 @@ class InputWidgets extends StatelessWidget {
   final TextEditingController ageController = TextEditingController();
 
   static const storage = FlutterSecureStorage();
+  InputtedData addToModel() {
+    NameData nameData = NameData(firstNameController.text,
+        middleNameController.text, lastNameController.text);
+    InputtedData inputtedData =
+        InputtedData(nameData, int.parse(ageController.text));
+    return inputtedData;
+  }
 
   void storeLocally() async {
-    await storage.write(key: 'firstName', value: firstNameController.text);
-    await storage.write(key: 'middleName', value: middleNameController.text);
-    await storage.write(key: 'lastName', value: lastNameController.text);
-    await storage.write(key: 'age', value: ageController.text);
-    print('secure storage output');
+    final inputtedData = addToModel();
+
+    String json = jsonEncode(inputtedData);
+    await storage.write(key: 'user', value: json);
 
     Map<String, String> data = await storage.readAll();
-    print(jsonEncode(data));
+    print(data);
   }
 
   @override
