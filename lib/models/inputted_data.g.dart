@@ -7,12 +7,12 @@ part of 'inputted_data.dart';
 // **************************************************************************
 
 InputtedData _$InputtedDataFromJson(Map<String, dynamic> json) => InputtedData(
-      NameData.fromJson(json['nameData'] as Map<String, dynamic>),
+      NameData.fromJson(json['name'] as Map<String, dynamic>),
       json['age'] as int,
     );
 
 Map<String, dynamic> _$InputtedDataToJson(InputtedData instance) =>
     <String, dynamic>{
-      'nameData': instance.nameData,
+      'name': instance.name,
       'age': instance.age,
     };
