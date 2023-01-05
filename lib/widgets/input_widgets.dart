@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:json_serialized_secure_storage/widgets/decorated_text_field.dart';
+import 'buttons.dart';
 import 'name_input.dart';
 
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
@@ -14,24 +15,47 @@ class InputWidgets extends StatelessWidget {
   final TextEditingController middleNameController = TextEditingController();
   final TextEditingController lastNameController = TextEditingController();
   final TextEditingController ageController = TextEditingController();
+  final TextEditingController dataController = TextEditingController();
 
   static const storage = FlutterSecureStorage();
-  InputtedData addToModel() {
-    NameData name = NameData(firstNameController.text,
-        middleNameController.text, lastNameController.text);
-    InputtedData inputtedData =
-        InputtedData(name, int.parse(ageController.text));
-    return inputtedData;
-  }
+  DateTime? dateTime = DateTime.now();
 
-  void storeLocally() async {
-    final inputtedData = addToModel();
+  Future<void> storeLocally() async {
+    InputtedData inputtedData = InputtedData(
+      name: NameData(
+        firstNameController.text,
+        middleNameController.text,
+        lastNameController.text,
+      ),
+      age: int.parse(ageController.text),
+      dateTime: dateTime as DateTime,
+    );
 
     String json = jsonEncode(inputtedData);
+    //this is where to encrpyt
     await storage.write(key: 'user', value: json);
+    await readAll();
+  }
 
+  Future<void> deleteAll() async {
+    await storage.deleteAll();
+    await readAll();
+  }
+
+  Future<void> readAll() async {
     Map<String, String> data = await storage.readAll();
-    print(data);
+    //this is where to decrypt
+    dataController.text = data.toString();
+  }
+
+  Future<void> getDateTime(BuildContext context) async {
+    DateTime? dt = await showDatePicker(
+      context: context,
+      initialDate: dateTime as DateTime,
+      firstDate: DateTime(1970, 1, 1),
+      lastDate: DateTime.now(),
+    );
+    dateTime = dt ?? dateTime;
   }
 
   @override
@@ -52,9 +76,19 @@ class InputWidgets extends StatelessWidget {
           ),
           const SizedBox(height: 50),
           ElevatedButton(
-            onPressed: storeLocally,
-            child: const Text('Save Data'),
-          )
+            onPressed: () async => await getDateTime(context),
+            child: const Text('Date Time'),
+          ),
+          Buttons(
+            storeLocally: storeLocally,
+            deleteAll: deleteAll,
+            readAll: readAll,
+          ),
+          TextField(
+            controller: dataController,
+            readOnly: true,
+            maxLines: null,
+          ),
         ],
       ),
     );

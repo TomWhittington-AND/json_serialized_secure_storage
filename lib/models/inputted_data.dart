@@ -8,8 +8,12 @@ part 'inputted_data.g.dart';
 class InputtedData {
   NameData name;
   int age;
-
-  InputtedData(this.name, this.age);
+  DateTime dateTime;
+  InputtedData({
+    required this.name,
+    required this.age,
+    required this.dateTime,
+  });
 
   @override
   String toString() {
